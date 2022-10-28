@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+    before_action :require_logged_in, only: [:index, :show, :edit, :update]
+    before_action :require_logged_out, only: [:new, :create]
 
     def index
         @users = User.all
@@ -23,6 +25,21 @@ class UsersController < ApplicationController
             redirect_to new_user_url
             # render :new
         end
+    end
+
+    def update
+        @user = User.find_by(id: params[:id])
+        if @user.update(user_params)
+            redirect_to user_url(@user)
+        else
+            render :edit
+        end
+
+    end
+
+    def edit
+        @user = User.find_by(id: params[:id])
+        render :edit
     end
 
 
